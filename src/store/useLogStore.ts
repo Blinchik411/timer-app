@@ -1,0 +1,51 @@
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { get, set, del } from 'idb-keyval';
+import { type LogState, type Session, type Settings } from '../types/store';
+
+const customIDBStorage = {
+    getItem: async (name: string): Promise<string | null> => {
+        const value = await get(name);
+        return value ?? null;
+    },
+    setItem: async (name: string, value: string): Promise<void> => {
+        await set(name, value);
+    },
+    removeItem: async (name: string): Promise<void> => {
+        await del(name);
+    }
+};
+
+export const useLogStore = create<LogState>()(
+    persist<LogState>(
+        (set) => ({
+            sessions: [],
+            streak: {
+                currentStreak: 0,
+                biggestStreak: 0,
+                lastActivity: '',
+            },
+            settings: {
+                dailyNotification: '18:00',
+                toggleNotification: false,
+            },
+            addSession: (newSession: Omit<Session, 'id'>) => {
+                set((state) => ({
+                    sessions: [
+                        ...state.sessions,
+                        { ...newSession, id: crypto.randomUUID() }
+                    ]
+                }));
+            },
+            updateSettings: (newSettings: Partial<Settings>) => {
+                set((state) => ({
+                    settings: { ...state.settings, ...newSettings }
+                }));
+            },
+        }),
+        {
+            name: 'coder-tracker-storage',
+            storage: createJSONStorage(() => customIDBStorage),
+        }
+    )
+);
