@@ -21,7 +21,7 @@ export interface LogState {
     sessions: Session[];
     streak: StreakInfo;
     settings: Settings;
-    addSession: (session: Omit<Session, 'id'>) => void;
+    addSession: (session: Session) => void;
     updateSettings: (settings: Partial<Settings>) => void;
 
 }

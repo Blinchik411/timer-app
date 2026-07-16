@@ -1,10 +1,10 @@
-import { useState} from "react";
+import React, { useState } from "react";
 import { useLogStore } from "../store/useLogStore.ts";
 import { useTimer } from "../hooks/useTimer.tsx";
 import formatTime from "../utils/formatTime.ts";
 
 const TimerContainer = () => {
-    const [initialTimerSeconds] = useState<number>(1800);
+    const [minutesInput, setMinutesInput] = useState<number>(25);
 
     const {
         time,
@@ -15,13 +15,14 @@ const TimerContainer = () => {
         pause,
         reset,
         setTime,
-        getSessionData // Забираем метод из хука
+        getSessionData
     } = useTimer({
         initialMode: 'stopwatch',
         initialSeconds: 0
     });
 
     const addSession = useLogStore((state) => state.addSession);
+
 
     const handleStopWatchClick = () => {
         setMode('stopwatch');
@@ -30,16 +31,27 @@ const TimerContainer = () => {
 
     const handleTimerClick = () => {
         setMode('timer');
-        setTime(initialTimerSeconds);
+        setTime(minutesInput * 60);
+    };
+
+    const handlePresetClick = (mins: number) => {
+        setMinutesInput(mins);
+        setTime(mins * 60);
+    };
+
+    const handleCustomMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = Math.max(1, Math.min(1440, Number(e.target.value) || 0));
+        setMinutesInput(value);
+        setTime(value * 60);
     };
 
     const handleSave = () => {
-        // Запрашиваем уже готовые и точные данные у хука
         const { startTime, endTime, duration } = getSessionData();
 
         if (duration <= 0) return;
 
         addSession({
+            id: crypto.randomUUID(),
             startTime,
             endTime,
             duration,
@@ -48,9 +60,14 @@ const TimerContainer = () => {
 
         reset();
     };
+
+    const isSaveDisabled = mode === 'stopwatch'
+        ? time === 0
+        : time === (minutesInput * 60);
+
     return (
         <div>
-            <div>
+            <div style={{ marginBottom: '20px' }}>
                 <button
                     type="button"
                     onClick={handleStopWatchClick}
@@ -67,15 +84,70 @@ const TimerContainer = () => {
                 </button>
             </div>
 
-            <div>
+            {mode === 'timer' && (
+                <div style={{ marginBottom: '20px', padding: '10px', border: '1px dashed #ccc', borderRadius: '8px' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                        <button
+                            disabled={isRunning}
+                            onClick={() => handlePresetClick(5)}
+                            style={{ marginRight: '5px' }}
+                        >
+                            5 мин
+                        </button>
+                        <button
+                            disabled={isRunning}
+                            onClick={() => handlePresetClick(10)}
+                            style={{ marginRight: '5px' }}
+                        >
+                            10 мин
+                        </button>
+                        <button
+                            disabled={isRunning}
+                            onClick={() => handlePresetClick(15)}
+                            style={{ marginRight: '5px' }}
+                        >
+                            15 мин
+                        </button>
+                        <button
+                            disabled={isRunning}
+                            onClick={() => handlePresetClick(30)}
+                            style={{ marginRight: '5px' }}
+                        >
+                            30 мин
+                        </button>
+                        <button
+                            disabled={isRunning}
+                            onClick={() => handlePresetClick(40)}
+                        >
+                            40 мин
+                        </button>
+                    </div>
+                    <div>
+                        <label>
+                            Свой вариант (мин):{' '}
+                            <input
+                                type="number"
+                                value={minutesInput}
+                                onChange={handleCustomMinutesChange}
+                                disabled={isRunning}
+                            />
+                        </label>
+                    </div>
+                </div>
+            )}
+
+            {/* Циферблат */}
+            <div style={{ fontSize: '1.5rem', margin: '20px 0' }}>
                 {formatTime(time)}
             </div>
 
+            {/* Управление */}
             <div>
                 {!isRunning ? (
                     <button
                         type="button"
                         onClick={start}
+                        style={{ marginRight: '10px', padding: '5px 15px' }}
                     >
                         Старт
                     </button>
@@ -83,6 +155,7 @@ const TimerContainer = () => {
                     <button
                         type="button"
                         onClick={pause}
+                        style={{ marginRight: '10px', padding: '5px 15px' }}
                     >
                         Пауза
                     </button>
@@ -91,6 +164,7 @@ const TimerContainer = () => {
                 <button
                     type="button"
                     onClick={reset}
+                    style={{ marginRight: '10px', padding: '5px 15px' }}
                 >
                     Сброс
                 </button>
@@ -98,7 +172,8 @@ const TimerContainer = () => {
                 <button
                     type="button"
                     onClick={handleSave}
-                    disabled={mode === 'stopwatch' ? time === 0 : time === initialTimerSeconds}
+                    disabled={isSaveDisabled}
+                    style={{ padding: '5px 15px' }}
                 >
                     Сохранить
                 </button>

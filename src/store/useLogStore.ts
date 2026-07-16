@@ -29,11 +29,11 @@ export const useLogStore = create<LogState>()(
                 dailyNotification: '18:00',
                 toggleNotification: false,
             },
-            addSession: (newSession: Omit<Session, 'id'>) => {
+            addSession: (newSession: Session) => {
                 set((state) => ({
                     sessions: [
                         ...state.sessions,
-                        { ...newSession, id: crypto.randomUUID() }
+                        newSession
                     ]
                 }));
             },

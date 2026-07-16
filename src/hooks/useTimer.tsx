@@ -16,6 +16,8 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
     const startTimeRef = useRef<number>(0);
     const accumulatedTimeRef = useRef<number>(initialSeconds);
 
+    const targetSecondsRef = useRef<number>(initialSeconds);
+
     const sessionStartTimeRef = useRef<string | null>(null);
     const totalDurationRef = useRef<number>(0);
 
@@ -51,13 +53,14 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
-        accumulatedTimeRef.current = initialSeconds;
-        setTime(initialSeconds);
 
+        const resetSeconds = mode === 'stopwatch' ? 0 : targetSecondsRef.current;
+        accumulatedTimeRef.current = resetSeconds;
+        setTime(resetSeconds);
 
         sessionStartTimeRef.current = null;
         totalDurationRef.current = 0;
-    }, [initialSeconds]);
+    }, [mode]);
 
     useEffect(() => {
         if (isRunning) {
@@ -74,11 +77,11 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
                     if (calculatedSeconds <= 0) {
                         setIsRunning(false);
                         setTime(0);
-                        totalDurationRef.current = initialSeconds;
+                        totalDurationRef.current = targetSecondsRef.current;
                         if (intervalRef.current) clearInterval(intervalRef.current);
                     } else {
                         setTime(calculatedSeconds);
-                        totalDurationRef.current = initialSeconds - calculatedSeconds;
+                        totalDurationRef.current = targetSecondsRef.current - calculatedSeconds;
                     }
                 }
             }, 200);
@@ -89,8 +92,7 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
                 clearInterval(intervalRef.current);
             }
         };
-    }, [isRunning, mode, initialSeconds]);
-
+    }, [isRunning, mode]);
 
     const getSessionData = useCallback(() => {
         return {
@@ -100,6 +102,15 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
         };
     }, []);
 
+    const setTimeWrapper = useCallback((newTime: number) => {
+        accumulatedTimeRef.current = newTime;
+
+        if (!isRunning) {
+            targetSecondsRef.current = newTime;
+        }
+        setTime(newTime);
+    }, [isRunning]);
+
     return {
         time,
         isRunning,
@@ -108,10 +119,7 @@ export const useTimer = ({ initialMode = 'stopwatch', initialSeconds = 0 }: UseT
         start,
         pause,
         reset,
-        getSessionData, // Отдаем метод в компонент
-        setTime: useCallback((newTime: number) => {
-            accumulatedTimeRef.current = newTime;
-            setTime(newTime);
-        }, [])
+        getSessionData,
+        setTime: setTimeWrapper
     };
 };
