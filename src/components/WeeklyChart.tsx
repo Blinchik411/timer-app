@@ -18,13 +18,20 @@ const WeeklyChart = () => {
 
 
                     <XAxis dataKey="label" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
+                    <YAxis
+                        axisLine={false}
+                        tickLine={false}
+
+                        domain={[0, (dataMax: number) => Math.max(60, Math.ceil(dataMax / 10) * 10)]}
+
+                        allowDecimals={false}
+                    />
 
                     <Tooltip
                         cursor={{ fill: '#f5f5f5' }}
                         formatter={(value) => {
                             const minutes = value ? Number(value) : 0;
-                            return [`${minutes} мин`, 'Время'];
+                            return [`${minutes} мин`];
                         }}
                     />
 
