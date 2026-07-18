@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useLogStore } from "../store/useLogStore.ts";
 import { useTimer } from "../hooks/useTimer.tsx";
 import formatTime from "../utils/formatTime.ts";
@@ -22,6 +22,8 @@ const TimerContainer = () => {
     });
 
     const addSession = useLogStore((state) => state.addSession);
+    const streak = useLogStore((state) => state.streak);
+    const checkStreak = useLogStore((state) => state.checkStreak);
 
 
     const handleStopWatchClick = () => {
@@ -65,8 +67,20 @@ const TimerContainer = () => {
         ? time === 0
         : time === (minutesInput * 60);
 
+    useEffect(() => {
+        checkStreak();
+    }, [checkStreak]);
+
     return (
         <div>
+            <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', background: '#f5f5f5', padding: '10px', borderRadius: '8px' }}>
+                <div>
+                    🔥 Текущая серия: <strong>{streak.currentStreak}</strong>
+                </div>
+                <div>
+                    🏆 Рекорд: <strong>{streak.biggestStreak}</strong>
+                </div>
+            </div>
             <div style={{ marginBottom: '20px' }}>
                 <button
                     type="button"

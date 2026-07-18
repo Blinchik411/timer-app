@@ -1,3 +1,5 @@
+import type {StreakState} from "../utils/CalculateStreakTime.ts";
+
 export interface Session {
     id: string;
     startTime: string;
@@ -6,11 +8,7 @@ export interface Session {
     mode: string;
 }
 
-export interface StreakInfo {
-    currentStreak: number;
-    biggestStreak: number;
-    lastActivity:  string;
-}
+
 
 export interface Settings  {
     dailyNotification: string;
@@ -19,11 +17,11 @@ export interface Settings  {
 
 export interface LogState {
     sessions: Session[];
-    streak: StreakInfo;
+    streak: StreakState;
     settings: Settings;
     addSession: (session: Session) => void;
     updateSettings: (settings: Partial<Settings>) => void;
-
+    checkStreak: () => void;
 }
 
 
