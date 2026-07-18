@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useLogStore } from "../store/useLogStore.ts";
 import { useTimer } from "../hooks/useTimer.tsx";
 import formatTime from "../utils/formatTime.ts";
+import WeeklyChart from "./WeeklyChart.tsx";
 
 const TimerContainer = () => {
     const [minutesInput, setMinutesInput] = useState<number>(25);
@@ -24,6 +25,7 @@ const TimerContainer = () => {
     const addSession = useLogStore((state) => state.addSession);
     const streak = useLogStore((state) => state.streak);
     const checkStreak = useLogStore((state) => state.checkStreak);
+    const isHydrated = useLogStore.persist.hasHydrated();
 
 
     const handleStopWatchClick = () => {
@@ -68,8 +70,10 @@ const TimerContainer = () => {
         : time === (minutesInput * 60);
 
     useEffect(() => {
-        checkStreak();
-    }, [checkStreak]);
+        if (isHydrated) {
+            checkStreak();
+        }
+    }, [isHydrated, checkStreak]);
 
     return (
         <div>
@@ -192,6 +196,7 @@ const TimerContainer = () => {
                     Сохранить
                 </button>
             </div>
+            <WeeklyChart/>
         </div>
     );
 };
