@@ -3,6 +3,7 @@ import { useLogStore } from "../store/useLogStore.ts";
 import { useTimer } from "../hooks/useTimer.tsx";
 import formatTime from "../utils/formatTime.ts";
 import WeeklyChart from "./WeeklyChart.tsx";
+import YearlyChart from "./YearlyChart.tsx";
 
 const TimerContainer = () => {
     const [minutesInput, setMinutesInput] = useState<number>(25);
@@ -197,6 +198,7 @@ const TimerContainer = () => {
                 </button>
             </div>
             <WeeklyChart/>
+            <YearlyChart/>
         </div>
     );
 };

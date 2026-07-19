@@ -8,8 +8,6 @@ export interface Session {
     mode: string;
 }
 
-
-
 export interface Settings  {
     dailyNotification: string;
     toggleNotification: boolean;
