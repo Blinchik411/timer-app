@@ -1,4 +1,3 @@
-// src/shared/hooks/useDynamicFavicon.ts
 import { useEffect, useRef } from 'react';
 
 // Определяем цвета как константы, чтобы их было легко менять
@@ -41,11 +40,10 @@ export const useDynamicFavicon = (isRunning: boolean): void => {
         // Выбираем цвет в зависимости от статуса таймера
         const circleColor = isRunning ? COLORS.active : COLORS.inactive;
 
-        // Рисуем простой залитый круг
-        // (чуть меньше 32px, чтобы были небольшие отступы от краев вкладки)
+
         ctx.fillStyle = circleColor;
         ctx.beginPath();
-        ctx.arc(16, 16, 14, 0, 2 * Math.PI); // x, y, radius, startAngle, endAngle
+        ctx.arc(15, 15, 10, 0, 2 * Math.PI);
         ctx.fill();
 
         // Обновляем Favicon в браузере
