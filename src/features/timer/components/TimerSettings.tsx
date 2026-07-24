@@ -31,16 +31,12 @@ const TimerSettings: React.FC = () => {
     };
 
     return (
-        <div className="timer-settings">
-            <div style={{ marginBottom: '20px' }}>
+        <div>
+            <div>
                 <button
                     type="button"
                     onClick={handleStopWatchClick}
                     disabled={isRunning}
-                    style={{
-                        marginRight: '10px',
-                        fontWeight: mode === 'stopwatch' ? 'bold' : 'normal'
-                    }}
                 >
                     Секундомер
                 </button>
@@ -48,28 +44,19 @@ const TimerSettings: React.FC = () => {
                     type="button"
                     onClick={handleTimerClick}
                     disabled={isRunning}
-                    style={{
-                        fontWeight: mode === 'timer' ? 'bold' : 'normal'
-                    }}
                 >
                     Таймер
                 </button>
             </div>
 
             {mode === 'timer' && (
-                <div style={{
-                    marginBottom: '20px',
-                    padding: '10px',
-                    border: '1px dashed #ccc',
-                    borderRadius: '8px'
-                }}>
-                    <div style={{ marginBottom: '10px' }}>
+                <div>
+                    <div>
                         {[5, 10, 15, 30, 40].map((mins) => (
                             <button
                                 key={mins}
                                 disabled={isRunning}
                                 onClick={() => handlePresetClick(mins)}
-                                style={{ marginRight: '5px' }}
                             >
                                 {mins} мин
                             </button>
@@ -85,7 +72,6 @@ const TimerSettings: React.FC = () => {
                                 value={minutesInput}
                                 onChange={handleCustomMinutesChange}
                                 disabled={isRunning}
-                                style={{ width: '70px' }}
                             />
                         </label>
                     </div>

@@ -7,7 +7,7 @@ const TimerDisplay: React.FC = () => {
     const time = useTimerStore((state) => state.time);
 
     return (
-        <div style={{ fontSize: '1.5rem', margin: '20px 0' }}>
+        <div>
             {formatTime(time)}
         </div>
     );

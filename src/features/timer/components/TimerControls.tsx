@@ -34,11 +34,10 @@ const TimerControls = () => {
     };
 
     return (
-        <div style={{ marginBottom: '20px' }}>
+        <div>
             <button
                 type="button"
                 onClick={isRunning ? pause : start}
-                style={{ marginRight: '10px', padding: '5px 15px' }}
             >
                 {isRunning ? 'Пауза' : 'Старт'}
             </button>
@@ -46,7 +45,6 @@ const TimerControls = () => {
             <button
                 type="button"
                 onClick={reset}
-                style={{ marginRight: '10px', padding: '5px 15px' }}
             >
                 Сброс
             </button>
@@ -55,7 +53,6 @@ const TimerControls = () => {
                 type="button"
                 onClick={handleSave}
                 disabled={!canSave}
-                style={{ padding: '5px 15px' }}
             >
                 Сохранить
             </button>
