@@ -1,5 +1,5 @@
-import { useLogStore } from "../store/useLogStore.ts";
-import { prepareYearlyChartData } from "../utils/analyticsTransformer.ts";
+import { useLogStore } from "@/features/analytics/store/useLogStore.ts";
+import { prepareYearlyChartData } from "@/features/analytics/utils/analyticsTransformer.ts";
 
 const intensityColors: Record<number, string> = {
     0: '#ebedf0',

@@ -1,7 +1,7 @@
-// TimerDisplay.tsx должен быть минималистичным:
+
 import React from 'react';
-import { useTimerStore } from '../store/useTimerStore';
-import formatTime from '../utils/formatTime';
+import { useTimerStore } from '@/features/timer/store/useTimerStore';
+import formatTime from '@/shared/utils/formatTime.ts';
 
 const TimerDisplay: React.FC = () => {
     const time = useTimerStore((state) => state.time);

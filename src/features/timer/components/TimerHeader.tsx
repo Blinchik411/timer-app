@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useLogStore } from "../store/useLogStore.ts";
+import { useLogStore } from "@/features/analytics/store/useLogStore.ts";
 
 const TimerHeader = () => {
     const streak = useLogStore((state) => state.streak);

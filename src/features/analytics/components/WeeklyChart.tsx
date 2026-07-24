@@ -1,6 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { useLogStore } from '../store/useLogStore';
-import { prepareWeeklyChartData } from '../utils/analyticsTransformer';
+import { useLogStore } from '@/features/analytics/store/useLogStore';
+import { prepareWeeklyChartData } from '@/features/analytics/utils/analyticsTransformer.ts';
 
 const WeeklyChart = () => {
     const sessions = useLogStore((state) => state.sessions);

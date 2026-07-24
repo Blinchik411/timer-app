@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
-import { type LogState, type Session, type Settings } from '../types/store';
-import {calculateNewStreak, checkAndResetExpiredStreak} from "../utils/calculateStreakTime.ts";
+import { type LogState, type Session, type Settings } from '@/features/analytics/types/analytics.types.ts'
+import {calculateNewStreak, checkAndResetExpiredStreak} from "@/features/analytics/utils/calculateStreakTime.ts";
 
 const customIDBStorage = {
     getItem: async (name: string): Promise<string | null> => {

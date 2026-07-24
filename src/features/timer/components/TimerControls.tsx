@@ -1,9 +1,9 @@
 import React from "react";
-import { useTimerStore } from "../store/useTimerStore.ts";
-import { useLogStore } from "../store/useLogStore.ts";
+import { useTimerStore } from "@/features/timer/store/useTimerStore.ts";
+import { useLogStore } from "@/features/analytics/store/useLogStore";
 
 const TimerControls = () => {
-  
+
     const isRunning = useTimerStore((state) => state.isRunning);
     const mode = useTimerStore((state) => state.mode);
 

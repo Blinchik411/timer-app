@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTimerStore } from '../store/useTimerStore';
+import { useTimerStore } from '@/features/timer/store/useTimerStore.ts';
 
 const TimerSettings: React.FC = () => {
     const [minutesInput, setMinutesInput] = useState<number>(25);
