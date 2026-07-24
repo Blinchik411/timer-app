@@ -1,5 +1,5 @@
 import React from "react";
-import { useTimerStore } from "@/features/timer/store/useTimerStore.ts";
+import { useTimerStore } from "@/features/timer/store/useTimerStore";
 import { useLogStore } from "@/features/analytics/store/useLogStore";
 
 const TimerControls = () => {
