@@ -6,17 +6,14 @@ import YearlyChart from "@/features/analytics/components/YearlyChart.tsx";
 import TimerSettings from "@/features/timer/components/TimerSettings.tsx";
 import TimerControls from "@/features/timer/components/TimerControls.tsx";
 import TimerHeader from "@/features/timer/components/TimerHeader.tsx";
-import useDynamicFavicon from "@/shared/hooks/useDinamicFavicon";
+
 
 const Timer = () => {
 
     const isRestoring = useTimerStore((state) => state.isRestoring);
     const restoreState = useTimerStore((state) => state.restoreState);
 
-    const isRunning = useTimerStore((state) => state.isRunning);
 
-    // Подключаем Side-effect для браузера
-    useDynamicFavicon(isRunning);
 
     useEffect(() => {
         restoreState();
