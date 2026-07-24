@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { get, set, del } from 'idb-keyval';
 import { type LogState, type Session, type Settings } from '../types/store';
-import {calculateNewStreak, checkAndResetExpiredStreak} from "../utils/CalculateStreakTime.ts";
+import {calculateNewStreak, checkAndResetExpiredStreak} from "../utils/calculateStreakTime.ts";
 
 const customIDBStorage = {
     getItem: async (name: string): Promise<string | null> => {

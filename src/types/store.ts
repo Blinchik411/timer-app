@@ -1,4 +1,4 @@
-import type {StreakState} from "../utils/CalculateStreakTime.ts";
+import type {StreakState} from "../utils/calculateStreakTime.ts";
 
 export interface Session {
     id: string;

@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTimerStore } from "../store/useTimerStore.ts";
 import { useLogStore } from "../store/useLogStore.ts";
 
 const TimerControls = () => {
-    // Подписываемся на подмножество стора
+  
     const isRunning = useTimerStore((state) => state.isRunning);
-    const time = useTimerStore((state) => state.time);
     const mode = useTimerStore((state) => state.mode);
 
-    // Действия таймера
+    const canSave = useTimerStore((state) => state.time > 0);
+
+    // Действия
     const start = useTimerStore((state) => state.start);
     const pause = useTimerStore((state) => state.pause);
     const reset = useTimerStore((state) => state.reset);
     const getSessionData = useTimerStore((state) => state.getSessionData);
 
-    // Действие лога
     const addSession = useLogStore((state) => state.addSession);
-
-    const [canSave, setCanSave] = useState(false);
-
-    // Следим за временем: если натикала хотя бы 1 секунда, разрешаем сохранение
-    useEffect(() => {
-        setCanSave(time > 0);
-    }, [time]);
 
     const handleSave = () => {
         const { startTime, endTime, duration } = getSessionData();
@@ -38,7 +31,6 @@ const TimerControls = () => {
         });
 
         reset();
-        setCanSave(false);
     };
 
     return (

@@ -9,6 +9,7 @@ const TimerSettings: React.FC = () => {
     const setMode = useTimerStore((state) => state.setMode);
     const setTime = useTimerStore((state) => state.setTime);
 
+
     const handleStopWatchClick = () => {
         setMode('stopwatch', 0);
     };
@@ -16,6 +17,7 @@ const TimerSettings: React.FC = () => {
     const handleTimerClick = () => {
         setMode('timer', minutesInput * 60);
     };
+
 
     const handlePresetClick = (mins: number) => {
         setMinutesInput(mins);
@@ -29,14 +31,16 @@ const TimerSettings: React.FC = () => {
     };
 
     return (
-        <>
-            {/* Выбор режима */}
+        <div className="timer-settings">
             <div style={{ marginBottom: '20px' }}>
                 <button
                     type="button"
                     onClick={handleStopWatchClick}
                     disabled={isRunning}
-                    style={{ marginRight: '10px' }}
+                    style={{
+                        marginRight: '10px',
+                        fontWeight: mode === 'stopwatch' ? 'bold' : 'normal'
+                    }}
                 >
                     Секундомер
                 </button>
@@ -44,12 +48,14 @@ const TimerSettings: React.FC = () => {
                     type="button"
                     onClick={handleTimerClick}
                     disabled={isRunning}
+                    style={{
+                        fontWeight: mode === 'timer' ? 'bold' : 'normal'
+                    }}
                 >
                     Таймер
                 </button>
             </div>
 
-            {/* Настройки таймера */}
             {mode === 'timer' && (
                 <div style={{
                     marginBottom: '20px',
@@ -85,7 +91,7 @@ const TimerSettings: React.FC = () => {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

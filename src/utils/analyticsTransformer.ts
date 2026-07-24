@@ -1,5 +1,5 @@
 import { type Session } from '../types/store';
-import { getLocalDateString } from './CalculateStreakTime';
+import { getLocalDateString } from './calculateStreakTime.ts';
 
 export interface ChartDataPoint {
     dateStr: string;
