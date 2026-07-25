@@ -23,7 +23,7 @@
   color: #a1a1aa;
   padding: 8px 20px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -51,7 +51,14 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  animation: fadeIn 0.2s ease-in-out;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  opacity: 1;
+  visibility: visible;
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Запрещаем клики по невидимым кнопкам */
+  }
 }
 
 /* Кнопки пресетов */
@@ -68,12 +75,12 @@
   color: #d4d4d8;
   padding: 6px 12px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled):not(.active) {
     background-color: #3f3f46;
     color: #ffffff;
     border-color: #52525b;
@@ -96,7 +103,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 18px;
   color: #a1a1aa;
 
   input {
@@ -106,7 +113,7 @@
     border-radius: 6px;
     padding: 6px 10px;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     text-align: center;
     outline: none;

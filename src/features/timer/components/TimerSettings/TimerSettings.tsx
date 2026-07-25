@@ -29,61 +29,55 @@ const TimerSettings: React.FC = () => {
         setTime(value * 60);
     };
 
-    return (
-        <div className={styles.container}>
-            {/* Переключатель режима */}
-            <div className={styles.modeToggle}>
-                <button
-                    type="button"
-                    className={`${styles.modeButton} ${mode === 'stopwatch' ? styles.active : ''}`}
-                    onClick={handleStopWatchClick}
-                    disabled={isRunning}
-                >
-                    Секундомер
-                </button>
-                <button
-                    type="button"
-                    className={`${styles.modeButton} ${mode === 'timer' ? styles.active : ''}`}
-                    onClick={handleTimerClick}
-                    disabled={isRunning}
-                >
-                    Таймер
-                </button>
+    return (<div className={styles.container}>
+        <div className={styles.modeToggle}>
+            <button
+                type="button"
+                className={`${styles.modeButton} ${mode === 'stopwatch' ? styles.active : ''}`}
+                onClick={handleStopWatchClick}
+                disabled={isRunning}
+            >
+                Секундомер
+            </button>
+            <button
+                type="button"
+                className={`${styles.modeButton} ${mode === 'timer' ? styles.active : ''}`}
+                onClick={handleTimerClick}
+                disabled={isRunning}
+            >
+                Таймер
+            </button>
+        </div>
+
+        <div className={`${styles.timerOptions} ${mode !== 'timer' ? styles.hidden : ''}`}>
+            <div className={styles.presets}>
+                {[5, 10, 15, 30, 40,60].map((mins) => (
+                    <button
+                        key={mins}
+                        type="button"
+                        className={`${styles.presetButton} ${minutesInput === mins ? styles.active : ''}`}
+                        disabled={isRunning}
+                        onClick={() => handlePresetClick(mins)}
+                    >
+                        {mins} мин
+                    </button>
+                ))}
             </div>
 
-            {/* Настройки таймера */}
-            {mode === 'timer' && (
-                <div className={styles.timerOptions}>
-                    <div className={styles.presets}>
-                        {[5, 10, 15, 30, 40].map((mins) => (
-                            <button
-                                key={mins}
-                                type="button"
-                                className={`${styles.presetButton} ${minutesInput === mins ? styles.active : ''}`}
-                                disabled={isRunning}
-                                onClick={() => handlePresetClick(mins)}
-                            >
-                                {mins} мин
-                            </button>
-                        ))}
-                    </div>
-
-                    <label className={styles.customInputLabel}>
-                        <span>Свой вариант:</span>
-                        <input
-                            type="number"
-                            min="1"
-                            max="1440"
-                            value={minutesInput}
-                            onChange={handleCustomMinutesChange}
-                            disabled={isRunning}
-                        />
-                        <span>мин</span>
-                    </label>
-                </div>
-            )}
+            <label className={styles.customInputLabel}>
+                <span>Свой вариант:</span>
+                <input
+                    type="number"
+                    min="1"
+                    max="1440"
+                    value={minutesInput}
+                    onChange={handleCustomMinutesChange}
+                    disabled={isRunning}
+                />
+                <span>мин</span>
+            </label>
         </div>
-    );
+    </div>);
 };
 
 export default React.memo(TimerSettings);
