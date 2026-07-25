@@ -1,8 +1,8 @@
 import  { useEffect } from "react";
 import { useTimerStore } from "@/features/timer/store/useTimerStore.ts";
 import TimerDisplay from "@/features/timer/components/TimerDisplay/TimerDisplay.tsx";
-// import WeeklyChart from "@/features/analytics/components/WeeklyChart.tsx";
-// import YearlyChart from "@/features/analytics/components/YearlyChart.tsx";
+import WeeklyChart from "@/features/analytics/components/WeeklyChart.tsx";
+import YearlyChart from "@/features/analytics/components/YearlyChart.tsx";
 import TimerSettings from "@/features/timer/components/TimerSettings/TimerSettings.tsx";
 import TimerControls from "@/features/timer/components/TimerControls/TimerControls.tsx";
 import TimerHeader from "@/features/timer/components/TimerHeader/TimerHeader.tsx";
@@ -36,8 +36,8 @@ const Timer = () => {
                 <TimerControls />
             </section>
             <aside className={styles.statsSection}>
-                {/*<WeeklyChart />*/}
-                {/*<YearlyChart />*/}
+                <WeeklyChart />
+                <YearlyChart />
             </aside>
         </div>
     );
