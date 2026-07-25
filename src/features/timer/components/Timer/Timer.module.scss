@@ -1,9 +1,8 @@
 .layout {
   display: grid;
-  /* Делим экран 50/50 (или 1fr 1fr). Если нужно, правая часть может быть чуть уже: например, 1fr 400px */
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   min-height: 100vh;
-  background-color: #121214; /* Темный фон всего приложения */
+  background-color: #1c1c1c;
   color: #ffffff;
 }
 
@@ -13,10 +12,9 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  border-right: 1px solid #27272a; /* Тонкий разделитель посередине */
+  border-right: 1px solid #27272a;
 }
 
 .statsSection {
   padding: 24px;
-  /* Пока оставляем пустым или добавляем легкий разделитель */
 }

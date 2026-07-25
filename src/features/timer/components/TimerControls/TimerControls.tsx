@@ -1,9 +1,9 @@
 import React from "react";
 import { useTimerStore } from "@/features/timer/store/useTimerStore";
 import { useLogStore } from "@/features/analytics/store/useLogStore";
+import styles from "./TimerControls.module.scss";
 
 const TimerControls = () => {
-
     const isRunning = useTimerStore((state) => state.isRunning);
     const mode = useTimerStore((state) => state.mode);
 
@@ -34,27 +34,34 @@ const TimerControls = () => {
     };
 
     return (
-        <div>
-            <button
-                type="button"
-                onClick={isRunning ? pause : start}
-            >
-                {isRunning ? 'Пауза' : 'Старт'}
-            </button>
+        <div className={styles.controlsContainer}>
+            {/* Верхняя строка: Старт/Пауза и Сброс */}
+            <div className={styles.topRow}>
+                <button
+                    type="button"
+                    className={`${styles.btnStart} ${isRunning ? styles.running : ''}`}
+                    onClick={isRunning ? pause : start}
+                >
+                    {isRunning ? 'Пауза' : 'Старт'}
+                </button>
 
-            <button
-                type="button"
-                onClick={reset}
-            >
-                Сброс
-            </button>
+                <button
+                    type="button"
+                    className={styles.btnReset}
+                    onClick={reset}
+                >
+                    Сброс
+                </button>
+            </div>
 
+            {/* Нижная строка: Сохранить */}
             <button
                 type="button"
+                className={styles.btnSave}
                 onClick={handleSave}
                 disabled={!canSave}
             >
-                Сохранить
+                Сохранить сессию
             </button>
         </div>
     );

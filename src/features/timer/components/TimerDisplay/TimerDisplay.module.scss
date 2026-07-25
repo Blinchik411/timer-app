@@ -1,0 +1,30 @@
+.displayContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0 32px 0;
+  user-select: none;
+}
+
+.timeText {
+  font-size: 76px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -1.5px;
+
+  /* Фиксируем ширину цифр, чтобы экран не "прыгал" при отсчете */
+  font-variant-numeric: tabular-nums;
+
+  /* Легкий эффект свечения для объема */
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+
+  /* Плавный переход при изменении размера если адаптируем под мобайл */
+  transition: all 0.2s ease;
+}
+
+/* Адаптив под мобильные экраны */
+@media (max-width: 640px) {
+  .timeText {
+    font-size: 56px;
+  }
+}

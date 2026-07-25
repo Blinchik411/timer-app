@@ -1,0 +1,23 @@
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  background-color: #27272a;
+  border: 1px solid #3f3f46;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 14px;
+  color: #a1a1aa;
+  margin-bottom: 32px;
+}
+
+.streakItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.streakValue {
+  color: #ffffff;
+  font-weight: 600;
+}

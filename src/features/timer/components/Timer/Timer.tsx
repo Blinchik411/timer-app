@@ -1,12 +1,12 @@
 import  { useEffect } from "react";
 import { useTimerStore } from "@/features/timer/store/useTimerStore.ts";
-import TimerDisplay from "@/features/timer/components/TimerDisplay.tsx";
+import TimerDisplay from "@/features/timer/components/TimerDisplay/TimerDisplay.tsx";
 // import WeeklyChart from "@/features/analytics/components/WeeklyChart.tsx";
 // import YearlyChart from "@/features/analytics/components/YearlyChart.tsx";
-import TimerSettings from "@/features/timer/components/TimerSettings.tsx";
-import TimerControls from "@/features/timer/components/TimerControls.tsx";
-import TimerHeader from "@/features/timer/components/TimerHeader.tsx";
-import styles from '../Timer/Timer.module.scss'
+import TimerSettings from "@/features/timer/components/TimerSettings/TimerSettings.tsx";
+import TimerControls from "@/features/timer/components/TimerControls/TimerControls.tsx";
+import TimerHeader from "@/features/timer/components/TimerHeader/TimerHeader.tsx";
+import styles from './Timer.module.scss'
 
 const Timer = () => {
 
