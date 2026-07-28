@@ -1,8 +1,8 @@
+// src/features/analytics/components/YearlyChart.tsx
 import React from 'react';
 import { useLogStore } from "@/features/analytics/store/useLogStore.ts";
 import { prepareYearlyChartData } from "@/features/analytics/utils/analyticsTransformer.ts";
 import styles from './YearlyChart.module.scss';
-
 
 const intensityColors: Record<number, string> = {
     0: '#27272a',
@@ -58,7 +58,7 @@ const YearlyChart = () => {
                                     backgroundColor: intensityColors[day.intensity],
                                 }}
                                 key={day.dateStr}
-                                data-tooltip={`${day.dateStr}: ${day.minutes} мин`}
+                                data-tooltip={`${day.dateStr}: ${day.formattedTime}`}
                             />
                         ))}
                     </div>
