@@ -2,6 +2,7 @@ import {useMemo} from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useLogStore } from '@/features/analytics/store/useLogStore';
 import { prepareWeeklyChartData } from '@/features/analytics/utils/analyticsTransformer.ts';
+import {formatMinutes} from "@/shared/utils/formatMinutes";
 
 const WeeklyChart = () => {
     const sessions = useLogStore((state) => state.sessions);
@@ -55,7 +56,7 @@ const WeeklyChart = () => {
                         itemStyle={{ color: '#818cf8' }}
                         formatter={(value) => {
                             const minutes = value ? Number(value) : 0;
-                            return [`${minutes} мин`, 'Время'];
+                            return [formatMinutes(minutes), 'Время'];
                         }}
                     />
 
