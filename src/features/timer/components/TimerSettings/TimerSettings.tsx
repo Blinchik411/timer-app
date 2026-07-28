@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { useTimerStore } from '@/features/timer/store/useTimerStore.ts';
 import styles from './TimerSettings.module.scss';
 
 const TimerSettings = () => {
-    // 1. Позволяем стейту хранить пустую строку
     const [minutesInput, setMinutesInput] = useState<number | ''>(25);
 
     const isRunning = useTimerStore((state) => state.isRunning);
@@ -43,13 +42,13 @@ const TimerSettings = () => {
         }
     };
 
-    // 4. Чтобы при уходе фокуса инпут не оставался пустым
     const handleBlur = () => {
         if (minutesInput === '' || minutesInput < 1) {
             setMinutesInput(25);
             setTime(25 * 60);
         }
     };
+
 
     return (
         <div className={styles.container}>
