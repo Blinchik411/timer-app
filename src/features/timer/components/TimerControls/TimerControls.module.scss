@@ -1,21 +1,19 @@
-/* Основной контейнер всех кнопок */
+
 .controlsContainer {
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  max-width: 320px; /* Фиксируем комфортную ширину кнопочной панели */
+  max-width: 320px;
   margin: 0 auto;
 }
 
-/* Верхний ряд: Старт и Сброс */
 .topRow {
   display: flex;
   gap: 12px;
   width: 100%;
 }
 
-/* Базовые стили для всех кнопок */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -45,21 +43,19 @@
   }
 }
 
-/* Кнопка "Старт / Пауза" (Занимает все свободное место в ряду) */
 .btnStart {
   @extend .btn;
   flex: 1;
-  background-color: #6366f1; /* Индиго акцент */
+  background-color: #6366f1;
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 
   &.running {
-    background-color: #f59e0b; /* Янтарно-оранжевый при паузе */
+    background-color: #df8d0e;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
   }
 }
 
-/* Кнопка "Сброс" */
 .btnReset {
   @extend .btn;
   flex: 1;
@@ -73,17 +69,18 @@
   }
 }
 
-/* Кнопка "Сохранить" (Под ними во всю ширину) */
+
 .btnSave {
   @extend .btn;
   width: 100%;
-  background-color: #10b981; /* Зеленый цвет сохранения */
+  background-color: #08a36f;
   color: #ffffff;
+  border: 1px solid transparent;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 
   &:disabled {
     background-color: #27272a;
-    border: 1px solid #3f3f46;
+    border-color: #3f3f46;
     color: #71717a;
     box-shadow: none;
   }

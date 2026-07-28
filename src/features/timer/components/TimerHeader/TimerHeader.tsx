@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { memo,useEffect } from "react";
 import { useLogStore } from "@/features/analytics/store/useLogStore.ts";
 import styles from "./TimerHeader.module.scss";
 import fireIcon from "@/assets/icons/fire.png";
@@ -39,4 +39,4 @@ const TimerHeader = () => {
     );
 };
 
-export default React.memo(TimerHeader);
+export default memo(TimerHeader);

@@ -1,30 +1,35 @@
 import { create } from 'zustand';
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 
+// Режимы работы: секундомер (прямой отсчет) или таймер (обратный отсчет)
 export type TimerMode = 'stopwatch' | 'timer';
 
+// Уникальный ключ для хранения снимка состояния таймера в IndexedDB
 const STORAGE_KEY = 'coder-tracker-timer-state';
 
+// Интерфейс сохраненного состояния в IndexedDB
 interface SavedTimerState {
     mode: TimerMode;
     isRunning: boolean;
-    startTime: number | null;
-    accumulatedSeconds: number;
-    targetSeconds: number;
-    sessionStartTime: string | null;
+    startTime: number | null; // Точка отсчета времени в миллисекундах (Date.now())
+    accumulatedSeconds: number; // Накопленное время на паузе
+    targetSeconds: number; // Целевое время для обратного отсчета
+    sessionStartTime: string | null; // ISO-штамп старта всей рабочей сессии
 }
 
+// Данные сессии, экспортируемые для сохранения в историю/аналитику
 interface SessionData {
     startTime: string;
     endTime: string;
-    duration: number;
+    duration: number; // Чистая продолжительность в секундах
 }
 
+// Интерфейс Zustand-стора (публичные состояния и методы для UI)
 interface TimerStore {
-    time: number;
-    isRunning: boolean;
-    mode: TimerMode;
-    isRestoring: boolean;
+    time: number; // Текущие секунды на экране
+    isRunning: boolean; // Флаг активности (идет отсчет / пауза)
+    mode: TimerMode; // Текущий режим
+    isRestoring: boolean; // Флаг фоновой гидратации из IndexedDB
 
     restoreState: () => Promise<void>;
     start: () => void;
@@ -35,17 +40,23 @@ interface TimerStore {
     getSessionData: () => SessionData;
 }
 
-// Внутренние переменные
-let intervalId: number | null = null;
-let saveIntervalId: number | null = null;
-let startTimeVal: number = 0;
-let accumulatedSecondsVal: number = 0;
-let targetSecondsVal: number = 0;
-let sessionStartTimeVal: string | null = null;
-let sessionEndTimeVal: string | null = null;
-let totalDurationVal: number = 0;
+/* ==========================================================================
+   ВНУТРЕННИЕ ПЕРЕМЕННЫЕ МОДУЛЯ (Модульный стейт)
+   Изолированы от React/Zustand для предотвращения лишних ререндеров
+   ========================================================================== */
+let intervalId: number | null = null; // ID таймера для вызова tick (200 мс)
+let saveIntervalId: number | null = null; // ID таймера для автосохранения (2000 мс)
+let startTimeVal: number = 0; // Точечная метка системного времени Date.now()
+let accumulatedSecondsVal: number = 0; // Накопленное время при паузе
+let targetSecondsVal: number = 0; // Исходное целевое время (для таймера)
+let sessionStartTimeVal: string | null = null; // Дата/время первого клика "Старт"
+let sessionEndTimeVal: string | null = null; // Дата/время паузы или завершения
+let totalDurationVal: number = 0; // Вычисленная полная длительность сессии
 
-// Очистка всех интервалов
+/**
+ * Очищает все фоновые интервалы тиков и автосохранения.
+ * Защищает от утечек памяти и параллельного запуска нескольких таймеров.
+ */
 const clearAllIntervals = () => {
     if (intervalId !== null) {
         clearInterval(intervalId);
@@ -57,13 +68,18 @@ const clearAllIntervals = () => {
     }
 };
 
-// Сохранение в IndexedDB
+/**
+ * Делает асинхронный снимок (snapshot) текущего состояния и сохраняет в IndexedDB.
+ * Запускается каждые 2 секунды во время хода таймера или при смене состояний.
+ */
 const saveToStorage = async () => {
     const state = useTimerStore.getState();
     const stateToSave: SavedTimerState = {
         mode: state.mode,
         isRunning: state.isRunning,
+        // Если запущен — сохраняем точку старта, если на паузе — null
         startTime: state.isRunning ? startTimeVal : null,
+        // Если запущен — накопленное время 0, если на паузе — текущее время паузы
         accumulatedSeconds: state.isRunning ? 0 : accumulatedSecondsVal,
         targetSeconds: targetSecondsVal,
         sessionStartTime: sessionStartTimeVal,
@@ -72,11 +88,16 @@ const saveToStorage = async () => {
     try {
         await idbSet(STORAGE_KEY, stateToSave);
     } catch (error) {
-        console.error('Ошибка сохранения:', error);
+        console.error('Ошибка сохранения состояния в IndexedDB:', error);
     }
 };
 
-// Функция тика
+/**
+ * Вычислительное сердце отсчета времени.
+ * Запускается 5 раз в секунду (200 мс).
+ * Вычисляет время на основе разницы системных меток Date.now(),
+ * что предотвращает рассинхрон при работе во фоновых вкладках.
+ */
 const tick = () => {
     const state = useTimerStore.getState();
     if (!state.isRunning) return;
@@ -84,19 +105,21 @@ const tick = () => {
     const now = Date.now();
 
     if (state.mode === 'stopwatch') {
+        // Секундомер: считаем, сколько секунд прошло с момента startTimeVal
         const seconds = Math.floor((now - startTimeVal) / 1000);
         totalDurationVal = seconds;
         useTimerStore.setState({ time: seconds });
     } else {
+        // Таймер: считаем, сколько секунд осталось до target-метки startTimeVal
         const remaining = Math.ceil((startTimeVal - now) / 1000);
 
         if (remaining <= 0) {
-            // Время вышло
+            // Завершение отсчета
             clearAllIntervals();
             totalDurationVal = targetSecondsVal;
             sessionEndTimeVal = new Date().toISOString();
             useTimerStore.setState({ time: 0, isRunning: false });
-            idbDel(STORAGE_KEY);
+            idbDel(STORAGE_KEY); // Очищаем хранилище после естественного финиша
         } else {
             totalDurationVal = targetSecondsVal - remaining;
             useTimerStore.setState({ time: remaining });
@@ -104,26 +127,32 @@ const tick = () => {
     }
 };
 
-// Запуск интервалов
+/**
+ * Координирует запуск фоновых интервалов тика (200 мс) и сохранения (2000 мс).
+ */
 const startIntervals = () => {
-    clearAllIntervals();
+    clearAllIntervals(); // Гарантированный сброс перед созданием новых
 
-    // Основной интервал для тиков
     intervalId = window.setInterval(tick, 200);
-
-    // Интервал для сохранения каждые 2 секунды
     saveIntervalId = window.setInterval(saveToStorage, 2000);
 };
 
+/* ==========================================================================
+   ZUSTAND STORE
+   ========================================================================== */
 export const useTimerStore = create<TimerStore>((set, get) => ({
     time: 0,
     isRunning: false,
     mode: 'stopwatch',
-    isRestoring: true,
+    isRestoring: true, // По умолчанию идет гидратация из БД
 
+    /**
+     * Восстанавливает состояние при первом старте/перезагрузке страницы.
+     * Рассчитывает время, прошедшее пока сайт был оффлайн.
+     */
     restoreState: async () => {
         try {
-            // Используем idbGet вместо get (перекрытого Zustand)
+            // Используем idbGet (переименованный импорт), чтобы избегнуть конфликта с get из Zustand
             const saved: SavedTimerState | undefined = await idbGet(STORAGE_KEY);
 
             if (!saved) {
@@ -131,14 +160,14 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
                 return;
             }
 
-            // Восстанавливаем переменные
+            // Восстанавливаем внутренние переменные из хранилища
             targetSecondsVal = saved.targetSeconds || 0;
             sessionStartTimeVal = saved.sessionStartTime || null;
             accumulatedSecondsVal = saved.accumulatedSeconds || 0;
 
-            // Устанавливаем режим
             set({ mode: saved.mode });
 
+            // Если таймер был запущен на момент закрытия вкладки
             if (saved.isRunning && saved.startTime) {
                 const now = Date.now();
                 startTimeVal = saved.startTime;
@@ -146,12 +175,14 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
                 let newTime = 0;
 
                 if (saved.mode === 'stopwatch') {
+                    // Вычисляем набежавшее время секундомера
                     newTime = Math.floor((now - saved.startTime) / 1000);
                 } else {
+                    // Вычисляем оставшееся время обратного отсчета
                     newTime = Math.ceil((saved.startTime - now) / 1000);
 
+                    // Если время истекло, пока сайт был закрыт
                     if (newTime <= 0) {
-                        // Время вышло
                         newTime = 0;
                         totalDurationVal = targetSecondsVal;
                         sessionEndTimeVal = new Date().toISOString();
@@ -175,10 +206,10 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
                     isRestoring: false
                 });
 
-                // Запускаем интервалы
+                // Возобновляем интервалы
                 startIntervals();
             } else {
-                // Таймер на паузе
+                // Если таймер находился на паузе
                 set({
                     time: accumulatedSecondsVal,
                     isRunning: false,
@@ -186,25 +217,28 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
                 });
             }
         } catch (e) {
-            console.error('Ошибка восстановления:', e);
+            console.error('Ошибка восстановления состояния таймера:', e);
             set({ isRestoring: false });
         }
     },
 
+    /**
+     * Запускает или возобновляет отсчет времени с учетом накопленного баланса.
+     */
     start: () => {
         const state = get();
 
-        // Не запускаем если восстанавливаемся или уже запущен
+        // Блокируем вызов во время восстановления или повторных кликов
         if (state.isRestoring || state.isRunning) return;
 
         sessionEndTimeVal = null;
 
-        // Устанавливаем время начала сессии
+        // Фиксируем старт сессии при первом запуске
         if (!sessionStartTimeVal) {
             sessionStartTimeVal = new Date().toISOString();
         }
 
-        // Устанавливаем startTimeVal
+        // Вычисляем startTimeVal с учетом уже накопленных секунд
         const now = Date.now();
         if (state.mode === 'stopwatch') {
             startTimeVal = now - state.time * 1000;
@@ -212,41 +246,35 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
             startTimeVal = now + state.time * 1000;
         }
 
-        // Обновляем состояние
         set({ isRunning: true });
-
-        // Запускаем интервалы
         startIntervals();
-
-        // Сохраняем
         saveToStorage();
     },
 
+    /**
+     * Ставит отсчет на паузу и фиксирует текущие результаты.
+     */
     pause: () => {
         const state = get();
 
         if (!state.isRunning || state.isRestoring) return;
 
-        // Останавливаем интервалы
         clearAllIntervals();
 
         sessionEndTimeVal = new Date().toISOString();
-
-        // Сохраняем текущее время
         accumulatedSecondsVal = state.time;
         totalDurationVal = state.mode === 'stopwatch' ? state.time : targetSecondsVal - state.time;
 
-        // Обновляем состояние
         set({ isRunning: false });
-
-        // Сохраняем
         saveToStorage();
     },
 
+    /**
+     * Полностью сбрасывает таймер к дефолтным значениям и очищает хранилище.
+     */
     reset: async () => {
         const state = get();
 
-        // Останавливаем интервалы
         clearAllIntervals();
 
         const resetSeconds = state.mode === 'stopwatch' ? 0 : targetSecondsVal;
@@ -261,6 +289,9 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
         await idbDel(STORAGE_KEY);
     },
 
+    /**
+     * Переключает режим (stopwatch/timer) и подготавливает стартовые секунды.
+     */
     setMode: (newMode: TimerMode, initialSeconds = 0) => {
         const state = get();
         if (state.isRunning || state.isRestoring) return;
@@ -280,11 +311,14 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
         saveToStorage();
     },
 
+    /**
+     * Задает кастомное время (например, выбор пресета 25 мин или ввод в инпут).
+     */
     setTime: (newTime: number) => {
         const state = get();
         if (state.isRunning || state.isRestoring) return;
 
-        const clampedTime = Math.max(0, newTime);
+        const clampedTime = Math.max(0, newTime); // Защита от отрицательных чисел
 
         accumulatedSecondsVal = clampedTime;
         targetSecondsVal = clampedTime;
@@ -293,6 +327,9 @@ export const useTimerStore = create<TimerStore>((set, get) => ({
         saveToStorage();
     },
 
+    /**
+     * Формирует и возвращает финальный снимок данных сессии для логирования и аналитики.
+     */
     getSessionData: () => {
         return {
             startTime: sessionStartTimeVal || new Date().toISOString(),

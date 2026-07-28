@@ -1,9 +1,9 @@
-import React from 'react';
+import {memo} from 'react';
 import { useTimerStore } from '@/features/timer/store/useTimerStore';
 import formatTime from '@/shared/utils/formatTime.ts';
 import styles from './TimerDisplay.module.scss';
 
-const TimerDisplay: React.FC = () => {
+const TimerDisplay = () => {
     const time = useTimerStore((state) => state.time);
 
     return (
@@ -15,4 +15,4 @@ const TimerDisplay: React.FC = () => {
     );
 };
 
-export default React.memo(TimerDisplay);
+export default memo(TimerDisplay);
