@@ -27,7 +27,7 @@ const monthsConfig = [
     { label: 'Дек', col: 49 },
 ];
 
-const YearlyChart: React.FC = () => {
+const YearlyChart = () => {
     const sessions = useLogStore((state) => state.sessions);
     const data = prepareYearlyChartData(sessions);
 

@@ -1,4 +1,4 @@
-import {memo} from 'react'
+import {useMemo} from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useLogStore } from '@/features/analytics/store/useLogStore';
 import { prepareWeeklyChartData } from '@/features/analytics/utils/analyticsTransformer.ts';
@@ -6,7 +6,7 @@ import { prepareWeeklyChartData } from '@/features/analytics/utils/analyticsTran
 const WeeklyChart = () => {
     const sessions = useLogStore((state) => state.sessions);
 
-    const data = prepareWeeklyChartData(sessions);
+    const data = useMemo(() => prepareWeeklyChartData(sessions), [sessions]);
 
     return (
         <div style={{
@@ -72,4 +72,4 @@ const WeeklyChart = () => {
 };
 
 // @ts-ignore
-export default memo(WeeklyChart);
+export default (WeeklyChart);
