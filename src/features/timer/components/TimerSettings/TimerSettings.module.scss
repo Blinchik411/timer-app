@@ -1,10 +1,10 @@
-
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modeToggle {
@@ -44,6 +44,17 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  /* Адаптив под мобильные экраны */
+  @media (max-width: 600px) {
+    padding: 6px 14px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 380px) {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
 }
 
 .timerOptions {
@@ -52,7 +63,10 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  height: 90px;
+  /* Заменили фиксированный height на min-height, чтобы при переносе кнопок верстка не ломалась */
+  min-height: 90px;
+  height: auto;
+  width: 100%;
   transition: opacity 0.2s ease, visibility 0.2s ease;
   opacity: 1;
   visibility: visible;
@@ -69,6 +83,11 @@
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: 100%;
+
+  @media (max-width: 600px) {
+    gap: 6px;
+  }
 }
 
 .presetButton {
@@ -100,6 +119,17 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  /* Адаптив под планшеты и смартфоны */
+  @media (max-width: 600px) {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 380px) {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
 }
 
 .customInputLabel {
@@ -108,6 +138,11 @@
   gap: 10px;
   font-size: 17px;
   color: #a1a1aa;
+
+  @media (max-width: 600px) {
+    font-size: 15px;
+    gap: 8px;
+  }
 
   input {
     box-sizing: border-box;
@@ -123,6 +158,12 @@
     text-align: center;
     outline: none;
     transition: border-color 0.2s;
+
+    @media (max-width: 600px) {
+      width: 58px;
+      padding: 4px 6px;
+      font-size: 15px;
+    }
 
     &:focus {
       border-color: #6366f1;

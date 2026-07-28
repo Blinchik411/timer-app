@@ -2,33 +2,69 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 48px; /* Увеличили расстояние между "Текущая серия" и "Рекорд" */
+  gap: 48px;
   background: #1c1c1c;
   border: 1px solid #3f3f46;
-  padding: 18px 36px; /* Больше отступы внутри плашки */
+  padding: 18px 36px;
   border-radius: 20px;
-  width: fit-content; /* Плашка подгоняется по размеру контента */
+  width: fit-content;
   margin-bottom: 32px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+
+  /* Адаптив для средних экранов и крупных телефонов */
+  @media (max-width: 600px) {
+    gap: 20px;
+    padding: 14px 20px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 360px; /* Ограничиваем максимальную ширину на мобилках */
+    justify-content: space-between; /* Раскидываем элементы по краям */
+  }
+
+  /* Для совсем узких экранов (как на вашем скриншоте 320px) */
+  @media (max-width: 380px) {
+    flex-direction: column; /* Перестраиваем в колонку */
+    gap: 12px;
+    padding: 16px;
+    justify-content: center;
+  }
 }
 
 .streakItem {
   display: flex;
   align-items: center;
-  gap: 8px; /* Отступ между иконкой, текстом и цифрой */
-  font-size: 18px; /* Увеличили размер текста подписи */
+  gap: 8px;
+  font-size: 18px;
   color: #e4e4e7;
   font-weight: 500;
+
+  /* Критически важно: запрещаем перенос текста на новую строку */
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    gap: 6px;
+  }
 }
 
 .icon {
   width: 33px;
   height: 36px;
   object-fit: contain;
+
+  @media (max-width: 600px) {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .streakValue {
   color: #ffffff;
-  font-size: 20px; /* Увеличили размер самой цифры */
+  font-size: 20px;
   font-weight: 700;
+
+  @media (max-width: 600px) {
+    font-size: 18px;
+  }
 }

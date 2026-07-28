@@ -3,10 +3,29 @@
   border: 1px solid #3f3f46;
   border-radius: 16px;
   padding: 20px;
-  height: 300px;
+  width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+
+  /* Критически важно для работы скролла внутри родительского Grid/Flex */
+  max-width: 100%;
+  overflow: hidden;
+
+  /* Задаем базовые размеры через переменные для удобного масштабирования */
+  --square-size: 15px;
+  --square-gap: 3px;
+  --label-size: 11px;
+
+
+
+  /* Мобильные телефоны: делаем ячейки еще компактнее */
+  @media (max-width: 768px) {
+    --square-size: 10px;
+    --square-gap: 2px;
+    --label-size: 9px;
+    padding: 16px;
+  }
 }
 
 .title {
@@ -14,39 +33,73 @@
   font-size: 18px;
   font-weight: 600;
   color: #ffffff;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
 }
 
+/* Контейнер скролла */
+.scrollContainer {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
 
+  /* Красивый кастомный скроллбар */
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #18181b;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 4px;
+
+    &:hover {
+      background: #52525b;
+    }
+  }
+}
 
 .gridWrapper {
   display: inline-block;
   min-width: max-content;
+  /* Небольшой отступ справа, чтобы тултипы последнего месяца не обрезались */
+  padding-right: 12px;
 }
 
 .monthsGrid {
   display: grid;
-  grid-template-columns: repeat(53, 14px);
-  gap: 3px;
+  /* Используем переменную вместо жесткого значения */
+  grid-template-columns: repeat(53, var(--square-size));
+  gap: var(--square-gap);
   margin-bottom: 8px;
 }
 
 .monthLabel {
-  font-size: 11px;
+  font-size: var(--label-size);
   color: #a1a1aa;
   white-space: nowrap;
 }
 
 .daysGrid {
   display: grid;
-  grid-template-rows: repeat(7, 14px);
+  /* Используем переменную вместо жесткого значения */
+  grid-template-rows: repeat(7, var(--square-size));
   grid-auto-flow: column;
-  gap: 3px;
+  gap: var(--square-gap);
 }
 
 .daySquare {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+  width: var(--square-size);
+  height: var(--square-size);
+  border-radius: 2px;
   position: relative;
   cursor: pointer;
   transition: transform 0.15s ease;
@@ -65,7 +118,6 @@
       transform: translateX(-50%) translateY(0);
     }
   }
-
 
   &::after {
     content: attr(data-tooltip);
@@ -87,5 +139,10 @@
     visibility: hidden;
     pointer-events: none;
     transition: all 0.15s ease-out;
+
+    @media (max-width: 768px) {
+      font-size: 10px;
+      padding: 3px 6px;
+    }
   }
 }

@@ -2,6 +2,8 @@
   min-height: 100vh;
   background-color: #1c1c1c;
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
 
 .timerSection {
@@ -14,11 +16,26 @@
 
 .statsSection {
   display: grid;
-  /* Задаем левой карточке ширину 420px (или flex-proportions), а правой отдаем оставшееся место */
-  grid-template-columns: minmax(380px, 440px) 1fr;
+  /* Гибкая левая колонка для недельного графика и 1fr для годового */
+  grid-template-columns: minmax(280px, 420px) 1fr;
   gap: 20px;
-  padding: 24px;
-  max-width: 1300px; /* Чтобы контент не растягивался слишком широко на 4K мониторах */
-  margin: 0 auto;    /* Центрируем блок аналитики */
-  align-items: stretch; /* Растягивает обе карточки по высоте */
+  padding: 0 24px 32px 24px;
+
+  /* Центрирование и уменьшение графика строго при достижении 1500px */
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  align-items: stretch;
+
+  /* Экран телефона / планшета: перестраиваем графики в одну колонку */
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  /* Для маленьких экранов телефонов уменьшаем боковые отступы */
+  @media (max-width: 480px) {
+    padding: 0 16px 24px 16px;
+    gap: 16px;
+  }
 }

@@ -1,32 +1,20 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useLogStore } from '@/features/analytics/store/useLogStore';
 import { prepareWeeklyChartData } from '@/features/analytics/utils/analyticsTransformer.ts';
-import {formatMinutes} from "@/shared/utils/formatMinutes";
+import { formatMinutes } from "@/shared/utils/formatMinutes";
+import styles from './WeeklyChart.module.scss'; // Импортируем стили
 
 const WeeklyChart = () => {
     const sessions = useLogStore((state) => state.sessions);
-
     const data = useMemo(() => prepareWeeklyChartData(sessions), [sessions]);
 
     return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: 300,
-            background: '#1c1c1c',
-            padding: '20px',
-            borderRadius: '16px',
-            border: '1px solid #333336',
-            boxSizing: 'border-box',
-            display: 'flex',
-            flexDirection: 'column'
-        }}>
-            <h4 style={{ marginTop: 0, textAlign: 'left', color: '#ffffff', fontSize: 18 }}>Активность за неделю</h4>
+        <div className={styles.chartCard}>
+            <h4 className={styles.title}>Активность за неделю</h4>
 
             <ResponsiveContainer width="100%" height="90%">
                 <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-
                     <CartesianGrid strokeDasharray="3 3" stroke="#38383c" vertical={false} />
 
                     <XAxis
@@ -72,5 +60,4 @@ const WeeklyChart = () => {
     );
 };
 
-// @ts-ignore
-export default (WeeklyChart);
+export default WeeklyChart;
