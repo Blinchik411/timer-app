@@ -7,6 +7,7 @@ import TimerSettings from "@/features/timer/components/TimerSettings/TimerSettin
 import TimerControls from "@/features/timer/components/TimerControls/TimerControls.tsx";
 import TimerHeader from "@/features/timer/components/TimerHeader/TimerHeader.tsx";
 import styles from './Timer.module.scss'
+import {BackupSettings} from "@/widgets/backup-settings/BackupSettings";
 
 const Timer = () => {
 
@@ -38,6 +39,7 @@ const Timer = () => {
             <aside className={styles.statsSection}>
                 <WeeklyChart />
                 <YearlyChart />
+                <BackupSettings />
             </aside>
         </div>
     );
