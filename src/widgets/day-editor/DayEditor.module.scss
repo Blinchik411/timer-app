@@ -16,49 +16,14 @@
   }
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
 .title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 
   @media (max-width: 768px) {
     font-size: 15px;
-  }
-}
-
-.titleIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #818cf8;
-}
-
-.dayBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background-color: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #a5b4fc;
-  font-size: 13px;
-
-  strong {
-    color: #ffffff;
-    font-weight: 600;
   }
 }
 

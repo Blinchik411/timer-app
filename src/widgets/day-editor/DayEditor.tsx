@@ -104,34 +104,9 @@ export const DayEditor: React.FC = () => {
         }
     }, [dayMinutes, selectedDate, clearDayTime]);
 
-    const handleFillCurrent = () => {
-        if (dayMinutes <= 0) return;
-        const h = Math.floor(dayMinutes / 60);
-        const m = dayMinutes % 60;
-        setHours(h > 0 ? String(h) : '');
-        setMinutes(m > 0 ? String(m) : '');
-    };
-
     return (
         <div className={styles.editorContainer}>
-            <div className={styles.header}>
-                <h3 className={styles.title}>
-                    <span className={styles.titleIcon}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                            <line x1="16" y1="2" x2="16" y2="6" />
-                            <line x1="8" y1="2" x2="8" y2="6" />
-                            <line x1="3" y1="10" x2="21" y2="10" />
-                        </svg>
-                    </span>
-                    Редактирование дней
-                </h3>
-
-                <div className={styles.dayBadge}>
-                    <span>За этот день:</span>
-                    <strong>{formatMinutes(dayMinutes)}</strong>
-                </div>
-            </div>
+            <h3 className={styles.title}>Редактирование дней</h3>
 
             <div className={styles.formGrid}>
                 {/* Выбор даты */}
@@ -170,16 +145,6 @@ export const DayEditor: React.FC = () => {
                 <div className={styles.fieldGroup}>
                     <div className={styles.label}>
                         <span>Время (ЧЧ : Мин)</span>
-                        {dayMinutes > 0 && (
-                            <button
-                                type="button"
-                                className={styles.quickBtn}
-                                onClick={handleFillCurrent}
-                                title="Вставить текущее записанное время в поля ввода для редактирования"
-                            >
-                                Вставить текущее ({formatMinutes(dayMinutes)})
-                            </button>
-                        )}
                     </div>
 
                     <div className={styles.timeInputWrapper}>
