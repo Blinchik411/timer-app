@@ -8,6 +8,7 @@ import TimerControls from "@/features/timer/components/TimerControls/TimerContro
 import TimerHeader from "@/features/timer/components/TimerHeader/TimerHeader.tsx";
 import styles from './Timer.module.scss'
 import {BackupSettings} from "@/widgets/backup-settings/BackupSettings";
+import {DayEditor} from "@/widgets/day-editor";
 
 const Timer = () => {
 
@@ -40,6 +41,7 @@ const Timer = () => {
                 <WeeklyChart />
                 <YearlyChart />
                 <BackupSettings />
+                <DayEditor />
             </aside>
         </div>
     );

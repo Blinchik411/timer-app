@@ -18,6 +18,9 @@ export interface LogState {
     streak: StreakState;
     settings: Settings;
     addSession: (session: Session) => void;
+    addManualTime: (dateStr: string, minutes: number) => void;
+    setDayTime: (dateStr: string, minutes: number) => void;
+    clearDayTime: (dateStr: string) => void;
     updateSettings: (settings: Partial<Settings>) => void;
     checkStreak: () => void;
 }
