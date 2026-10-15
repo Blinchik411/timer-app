@@ -70,6 +70,7 @@
 .gridWrapper {
   display: inline-block;
   min-width: max-content;
+  padding-left: 4px;
   /* Небольшой отступ справа, чтобы тултипы последнего месяца не обрезались */
   padding-right: 12px;
 }
@@ -97,6 +98,10 @@
 }
 
 .daySquare {
+  --tx: -50%;
+  --ty: 4px;
+  --hover-ty: 0;
+
   width: var(--square-size);
   height: var(--square-size);
   border-radius: 2px;
@@ -115,7 +120,7 @@
     &::after {
       opacity: 1;
       visibility: visible;
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(var(--tx)) translateY(var(--hover-ty));
     }
   }
 
@@ -124,7 +129,7 @@
     position: absolute;
     bottom: 125%;
     left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    transform: translateX(var(--tx)) translateY(var(--ty));
 
     background-color: #1c1c1c;
     color: #ffffff;
@@ -143,6 +148,36 @@
     @media (max-width: 768px) {
       font-size: 10px;
       padding: 3px 6px;
+    }
+  }
+
+  /* Для верхних рядов показываем тултип снизу, чтобы он не обрезался верхней границей */
+  &:nth-child(7n + 1),
+  &:nth-child(7n + 2) {
+    --ty: -4px;
+
+    &::after {
+      bottom: auto;
+      top: 125%;
+    }
+  }
+
+  /* Для первых 4 недель выравниваем тултип по левому краю ячейки (растет вправо) */
+  &:nth-child(-n + 28) {
+    --tx: 0;
+
+    &::after {
+      left: 0;
+    }
+  }
+
+  /* Для последних 4 недель выравниваем тултип по правому краю ячейки (растет влево) */
+  &:nth-last-child(-n + 28) {
+    --tx: 0;
+
+    &::after {
+      left: auto;
+      right: 0;
     }
   }
 }
