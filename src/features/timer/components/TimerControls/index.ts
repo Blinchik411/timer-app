@@ -1,1 +1,1 @@
-export {default } from './TimerControls'
+export { default } from './TimerControls'

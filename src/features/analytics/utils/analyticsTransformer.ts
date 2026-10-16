@@ -1,94 +1,90 @@
-
-import { type Session } from '@/features/analytics/types/analytics.types.ts';
-import { getLocalDateString } from './calculateStreakTime.ts';
-import { formatMinutes } from "@/shared/utils/formatMinutes";
+import {
+  eachDayOfInterval,
+  startOfWeek,
+  endOfWeek,
+  startOfYear,
+  endOfYear,
+  format,
+  parseISO,
+} from 'date-fns'
+import type { Session } from '@/entities/activity'
+import { formatMinutes } from '@/shared/utils/formatMinutes'
 
 export interface ChartDataPoint {
-    dateStr: string;
-    label: string;
-    minutes: number;
+  dateStr: string
+  label: string
+  minutes: number
 }
 
 export interface ContributionDay {
-    dateStr: string;
-    minutes: number;
-    formattedTime: string;
-    intensity: 0 | 1 | 2 | 3 | 4;
+  dateStr: string
+  minutes: number
+  formattedTime: string
+  intensity: 0 | 1 | 2 | 3 | 4
 }
 
+const DAYS_OF_WEEK = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+
 export const prepareWeeklyChartData = (sessions: Session[]): ChartDataPoint[] => {
-    const daysOfWeek = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-    const chartData: ChartDataPoint[] = [];
+  const now = new Date()
+  const weekDays = eachDayOfInterval({
+    start: startOfWeek(now, { weekStartsOn: 1 }),
+    end: endOfWeek(now, { weekStartsOn: 1 }),
+  })
 
-    const today = new Date();
-    const currentDay = today.getDay();
-    const daysSinceMonday = currentDay === 0 ? 6 : currentDay - 1;
+  const chartData: ChartDataPoint[] = weekDays.map((d) => ({
+    dateStr: format(d, 'yyyy-MM-dd'),
+    label: DAYS_OF_WEEK[d.getDay()] ?? '',
+    minutes: 0,
+  }))
 
-    for (let i = 0; i < 7; i++) {
-        const d = new Date();
-        d.setDate(today.getDate() - daysSinceMonday + i);
+  sessions.forEach((session) => {
+    if (!session.startTime) return
+    const sessionDateStr = format(parseISO(session.startTime), 'yyyy-MM-dd')
+    const dayMatch = chartData.find((point) => point.dateStr === sessionDateStr)
 
-        const dateStr = getLocalDateString(d);
-        const label = daysOfWeek[d.getDay()];
-
-        chartData.push({
-            dateStr,
-            label,
-            minutes: 0
-        });
+    if (dayMatch) {
+      dayMatch.minutes += Math.round(session.duration / 60)
     }
+  })
 
-    sessions.forEach((session) => {
-        const sessionDateStr = getLocalDateString(new Date(session.startTime));
-        const dayMatch = chartData.find(point => point.dateStr === sessionDateStr);
-
-        if (dayMatch) {
-            dayMatch.minutes += Math.round(session.duration / 60);
-        }
-    });
-
-    return chartData;
-};
+  return chartData
+}
 
 export const prepareYearlyChartData = (sessions: Session[]): ContributionDay[] => {
-    const yearlyChartData: ContributionDay[] = [];
+  const now = new Date()
+  const allDays = eachDayOfInterval({
+    start: startOfYear(now),
+    end: endOfYear(now),
+  })
 
-    const startDate = new Date(new Date().getFullYear(), 0, 1);
-    const endDate = new Date(new Date().getFullYear(), 11, 31);
+  const yearlyChartData: ContributionDay[] = allDays.map((d) => ({
+    dateStr: format(d, 'yyyy-MM-dd'),
+    minutes: 0,
+    formattedTime: '0 мин',
+    intensity: 0,
+  }))
 
-    let current = new Date(startDate);
+  sessions.forEach((session) => {
+    if (!session.startTime) return
+    const sessionDateStr = format(parseISO(session.startTime), 'yyyy-MM-dd')
+    const dayMatch = yearlyChartData.find((point) => point.dateStr === sessionDateStr)
 
-    while (current <= endDate) {
-        const dateStr = getLocalDateString(current);
-
-        yearlyChartData.push({
-            dateStr: dateStr,
-            minutes: 0,
-            formattedTime: '0 мин',
-            intensity: 0
-        });
-
-        current.setDate(current.getDate() + 1);
+    if (dayMatch) {
+      dayMatch.minutes += Math.round(session.duration / 60)
     }
+  })
 
-    sessions.forEach((session) => {
-        const sessionDateStr = getLocalDateString(new Date(session.startTime));
-        const dayMatch = yearlyChartData.find(point => point.dateStr === sessionDateStr);
+  yearlyChartData.forEach((day) => {
+    day.formattedTime = formatMinutes(day.minutes)
 
-        if (dayMatch) {
-            dayMatch.minutes += Math.round(session.duration / 60);
-        }
-    });
+    if (day.minutes === 0) day.intensity = 0
+    else if (day.minutes <= 60) day.intensity = 1
+    else if (day.minutes <= 90) day.intensity = 2
+    else if (day.minutes <= 180) day.intensity = 3
+    else day.intensity = 4
+  })
 
-    yearlyChartData.forEach((day) => {
-        day.formattedTime = formatMinutes(day.minutes);
+  return yearlyChartData
+}
 
-        if (day.minutes === 0) day.intensity = 0;
-        else if (day.minutes <= 60) day.intensity = 1;
-        else if (day.minutes <= 90) day.intensity = 2;
-        else if (day.minutes <= 180) day.intensity = 3;
-        else day.intensity = 4;
-    });
-
-    return yearlyChartData;
-};

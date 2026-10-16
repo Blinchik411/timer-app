@@ -1,1 +1,1 @@
-export {default} from './TimerDisplay'
+export { default } from './TimerDisplay'

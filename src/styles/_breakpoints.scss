@@ -1,0 +1,33 @@
+@use 'sass:map';
+
+$breakpoints: (
+  'xs': 380px,
+  'sm': 540px,
+  'md': 768px,
+  'lg': 900px,
+  'xl': 1200px,
+);
+
+@mixin mq-down($bp) {
+  $width: map.get($breakpoints, $bp);
+
+  @if $width {
+    @media (width <= $width) {
+      @content;
+    }
+  } @else {
+    @warn "Неизвестный брейкпоинт `#{$bp}` в $breakpoints.";
+  }
+}
+
+@mixin mq-up($bp) {
+  $width: map.get($breakpoints, $bp);
+
+  @if $width {
+    @media (width >= $width) {
+      @content;
+    }
+  } @else {
+    @warn "Неизвестный брейкпоинт `#{$bp}` в $breakpoints.";
+  }
+}

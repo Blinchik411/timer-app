@@ -1,1 +1,1 @@
-export { default } from "./WeeklyChart"
+export { default } from './WeeklyChart'

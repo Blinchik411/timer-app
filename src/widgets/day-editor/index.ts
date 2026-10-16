@@ -1,1 +1,1 @@
-export { DayEditor } from './DayEditor';
+export { DayEditor } from './DayEditor'

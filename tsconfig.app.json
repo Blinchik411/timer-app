@@ -7,8 +7,11 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "module": "esnext",
-    "types": ["vite/client"],
+    "types": ["vitest/globals", "vite/client"],
     "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

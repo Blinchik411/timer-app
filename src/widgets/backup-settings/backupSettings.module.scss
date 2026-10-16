@@ -1,24 +1,24 @@
 .backupContainer {
-  background-color: #1c1c1c;
-  border: 1px solid #3f3f46;
-  border-radius: 16px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
   margin-top: 24px;
 
-  @media (max-width: 768px) {
+  @include mq-down('md') {
     padding: 16px;
   }
 }
 
 .title {
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text-primary);
 
-  @media (max-width: 768px) {
+  @include mq-down('md') {
     font-size: 15px;
     margin-bottom: 12px;
   }
@@ -28,9 +28,11 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  align-items: center;
 
-  @media (max-width: 480px) {
+  @include mq-down('sm') {
     flex-direction: column;
+    align-items: stretch;
   }
 }
 
@@ -39,36 +41,56 @@
 }
 
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
+
   padding: 10px 18px;
-  background-color: #6366f1; // Основной фиолетовый акцент (как кнопка "Старт")
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color var(--transition-normal),
+    transform var(--transition-fast);
 
   &:hover {
-    background-color: #4f46e5;
+    background-color: var(--color-primary-hover);
   }
 
   &:active {
     transform: scale(0.98);
   }
 
-  // Второстепенная кнопка (импорт в стиле кнопки "Сброс")
   &.secondary {
-    background-color: #27272a;
-    border: 1px solid #3f3f46;
-    color: #e4e4e7;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
 
     &:hover {
-      background-color: #3f3f46;
-      color: #ffffff;
+      background-color: var(--color-bg-surface-hover);
+      color: var(--color-text-primary);
     }
+  }
+}
+
+.feedback {
+  margin-top: 12px;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+
+  &.success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success-border);
+  }
+
+  &.error {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-border);
   }
 }

@@ -1,30 +1,17 @@
 .displayContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0 32px 0;
+  @include flex-center;
+
+  margin: 20px 0 32px;
   user-select: none;
 }
 
 .timeText {
-  font-size: 76px;
+  /* Резиновая плавная типографика: от 52px (3.25rem) на мобильных до 76px (4.75rem) на десктопе */
+  font-size: clamp(3.25rem, 9.5vw, 4.75rem);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text-primary);
   letter-spacing: -1.5px;
-
-  /* Фиксируем ширину цифр, чтобы экран не "прыгал" при отсчете */
   font-variant-numeric: tabular-nums;
-
-  /* Легкий эффект свечения для объема */
-  text-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
-
-  /* Плавный переход при изменении размера если адаптируем под мобайл */
-  transition: all 0.2s ease;
-}
-
-/* Адаптив под мобильные экраны */
-@media (max-width: 640px) {
-  .timeText {
-    font-size: 56px;
-  }
+  text-shadow: 0 0 30px rgb(255 255 255 / 8%);
+  transition: all var(--transition-normal);
 }

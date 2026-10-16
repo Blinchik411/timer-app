@@ -1,77 +1,173 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# ⏱️ Coder Tracker
 
-Currently, two official plugins are available:
+**Минималистичный трекер рабочего времени и Pomodoro для разработчиков с оффлайн-сохранением, аналитикой в стиле GitHub и стриками активности.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+[![React](https://img.shields.io/badge/React-19.x-61dafb?style=flat&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8+-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646cff?style=flat&logo=vite)](https://vitejs.dev/)
+[![Zustand](https://img.shields.io/badge/Zustand-5.x-443e38?style=flat)](https://github.com/pmndrs/zustand)
+[![Vitest](https://img.shields.io/badge/Vitest-5.x-6e9f18?style=flat&logo=vitest)](https://vitest.dev/)
+[![Architecture](https://img.shields.io/badge/Architecture-Feature--Sliced_Design-blue)](https://feature-sliced.design/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## React Compiler
+[**🌐 Открыть Live Demo**](https://blinchik411.github.io/timer-app/) · [Сообщить о баге](https://github.com/Blinchik411/timer-app/issues)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+</div>
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## 📖 О проекте
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Coder Tracker** — это веб-приложение для фокусировки и трекинга времени, вдохновлённое культурой открытого исходного кода. Приложение решает проблему потери концентрации и обеспечивает наглядный учет затраченного времени без необходимости регистрации на сторонних сервисах.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Все данные хранятся локально в **IndexedDB** браузера, гарантируя полную приватность и моментальную работу без интернета.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ✨ Ключевые возможности
 
+### ⏱️ Гибкий учет времени
+
+- **Два режима работы:**
+  - **Таймер (Pomodoro):** быстрые пресеты (5, 10, 15, 30, 40, 60 мин) + ввод любого произвольного времени (1–1440 мин).
+  - **Секундомер:** прямой отсчет времени для непрерывных сессий.
+- **Устойчивость к закрытию вкладки:** отсчет времени привязан к системным меткам `Date.now()`. При перезагрузке страницы или закрытии браузера таймер точно восстанавливает набежавшее время.
+- **Звуковой сигнал (Web Audio API):** гармоничный двухтональный сигнал окончания таймера, синтезируемый аппаратно без внешних аудиофайлов.
+
+### 📊 Аналитика и визуализация
+
+- **Недельный график активности:** интерактивная столбчатая диаграмма на базе `Recharts` с адаптивным масштабом.
+- **Годовой Heatmap (в стиле GitHub):** сетка из 365 дней с 4 уровнями интенсивности активности и тултипами.
+- **Ручное редактирование дней:** возможность в любой момент скорректировать активность за выбранную дату (добавить/перезаписать/очистить).
+
+### 🔥 Геймификация и стрики
+
+- Автоматический расчет **текущей серии дней (Streak)** и **рекорда за всё время**.
+- Интеллектуальный алгоритм проверки: серия не сбрасывается при заходе на следующий день, но обнуляется при пропуске более чем 1 суток.
+- Автоматический пересчет истории при удалении или изменении сессий.
+
+### 🎨 UX и детали
+
+- **Динамический Favicon:** отрисовка индикатора активности (зеленый/серый) на `HTML5 Canvas` прямо в фавиконе вкладки.
+- **Синхронизация заголовка вкладки (`document.title`):** отображение текущего времени и статуса (работа/пауза) в названии вкладки.
+- **Горячие клавиши (Hotkeys):**
+  - <kbd>Space</kbd> — Старт / Пауза
+  - <kbd>R</kbd> — Сброс таймера
+  - <kbd>Enter</kbd> — Сохранение завершенной сессии
+- **Резервное копирование:** экспорт всех данных в `.json` и мгновенный импорт из файла бэкапа.
+
+---
+
+## 🏗️ Архитектура проекта (Feature-Sliced Design)
+
+Проект спроектирован по методологии **FSD (Feature-Sliced Design)** с жестким контролем однонаправленного потока зависимостей:
+
+```text
+src/
+├── app/                  # Инициализация приложения, глобальные стили
+├── pages/
+│   └── timer-page/       # Сборка главного экрана таймера и статистики
+├── widgets/
+│   ├── day-editor/       # Виджет ручного редактирования времени по дням
+│   └── backup-settings/  # Виджет импорта и экспорта JSON-бэкапов
+├── features/
+│   ├── timer/            # Управление таймером (контролы, настройки, дисплей)
+│   └── analytics/        # Графики активности (WeeklyChart, YearlyChart)
+├── entities/
+│   └── activity/         # Бизнес-сущность активности (сессии, стрик, стор Zustand, IndexedDB)
+└── shared/
+    ├── config/           # Конфигурация тестов (setup.ts)
+    ├── hooks/            # Хуки (useDynamicFavicon, useTimerTitle)
+    ├── utils/            # Чистые функции (formatTime, formatMinutes, formatDate, soundAlert, backup)
+    └── styles/           # Нормализация и шрифты
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛠️ Стек технологий
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Технология                     | Назначение                                                              |
+| :----------------------------- | :---------------------------------------------------------------------- |
+| **React 19**                   | Современные компоненты, хуки, мемоизация                                |
+| **TypeScript (Strict Mode)**   | Строгая статическая типизация интерфейсов и сторов                      |
+| **Zustand 5**                  | Легковесный менеджер состояния с middleware `persist`                   |
+| **idb-keyval**                 | Промис-обертка над браузерным IndexedDB (асинхронное оффлайн-хранилище) |
+| **Recharts 3**                 | Декларативные SVG-графики для недельной статистики                      |
+| **SCSS Modules**               | Модульная изоляция стилей и адаптивная верстка (Mobile / Desktop)       |
+| **Vitest 5 + Testing Library** | Высокоскоростные модульные тесты                                        |
+| **Vite 8**                     | Молниеносная сборка и HMR                                               |
+| **ESLint 10**                  | Статический анализ качества кода                                        |
 
+---
+
+## 🧪 Тестирование
+
+Ключевая бизнес-логика (алгоритмы стриков, трансформация сессий в графики, утилиты форматирования) покрыта модульными тестами с помощью **Vitest**:
+
+- `calculateStreakTime.test.ts` — 14 тестов (краевые случаи стриков, сброс, учет пропусков, переходы дат).
+- `analyticsTransformer.test.ts` — 4 теста (недельная агрегация, годовая тепловая карта интенсивности).
+- `formatTime.test.ts`, `formatMinutes.test.ts`, `formatDate.test.ts` — 11 тестов (граничные значения, форматирование).
+
+Запуск тестов:
+
+```bash
+npm run test
 ```
+
+Запуск тестов в watch-режиме:
+
+```bash
+npm run test:watch
+```
+
+---
+
+## 🚀 Быстрый старт
+
+### Требования
+
+- Node.js `>= 18.0.0`
+- npm `>= 9.0.0`
+
+### Установка и запуск
+
+1. **Клонируйте репозиторий:**
+
+   ```bash
+   git clone https://github.com/Blinchik411/timer-app.git
+   cd timer-app
+   ```
+
+2. **Установите зависимости:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Запустите сервер разработки:**
+   ```bash
+   npm run dev
+   ```
+   Приложение будет доступно по адресу `http://localhost:5173`.
+
+---
+
+## 📜 Доступные скрипты
+
+| Команда              | Описание                                                        |
+| :------------------- | :-------------------------------------------------------------- |
+| `npm run dev`        | Запуск локального сервера разработки Vite                       |
+| `npm run build`      | Проверка типов TypeScript (`tsc -b`) и сборка production-бандла |
+| `npm run lint`       | Проверка кода с помощью ESLint                                  |
+| `npm run test`       | Запуск всех модульных тестов Vitest                             |
+| `npm run test:watch` | Интерактивный запуск тестов при изменении файлов                |
+| `npm run preview`    | Предпросмотр собранного production-бандла                       |
+| `npm run deploy`     | Автоматическая сборка и деплой на GitHub Pages                  |
+
+---
+
+## 📄 Лицензия
+
+Проект распространяется под лицензией MIT.

@@ -1,83 +1,58 @@
 .chartCard {
-  background-color: #1c1c1c;
-  border: 1px solid #3f3f46;
-  border-radius: 16px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-
-  /* Критически важно для работы скролла внутри родительского Grid/Flex */
   max-width: 100%;
   overflow: hidden;
 
-  /* Задаем базовые размеры через переменные для удобного масштабирования */
   --square-size: 15px;
   --square-gap: 3px;
   --label-size: 11px;
 
-
-
-  /* Мобильные телефоны: делаем ячейки еще компактнее */
-  @media (max-width: 768px) {
+  @include mq-down('md') {
     --square-size: 10px;
     --square-gap: 2px;
     --label-size: 9px;
+
     padding: 16px;
   }
 }
 
 .title {
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text-primary);
 
-  @media (max-width: 768px) {
+  @include mq-down('md') {
     font-size: 16px;
     margin-bottom: 12px;
   }
 }
 
-/* Контейнер скролла */
 .scrollContainer {
+  @include custom-scrollbar(6px, var(--color-bg-dark), var(--color-border-subtle));
+
   width: 100%;
   overflow-x: auto;
   padding-bottom: 8px;
-  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
-
-  /* Красивый кастомный скроллбар */
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #18181b;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #3f3f46;
-    border-radius: 4px;
-
-    &:hover {
-      background: #52525b;
-    }
-  }
+  -webkit-overflow-scrolling: touch;
 }
 
 .gridWrapper {
   display: inline-block;
   min-width: max-content;
   padding-left: 4px;
-  /* Небольшой отступ справа, чтобы тултипы последнего месяца не обрезались */
   padding-right: 12px;
 }
 
 .monthsGrid {
   display: grid;
-  /* Используем переменную вместо жесткого значения */
   grid-template-columns: repeat(53, var(--square-size));
   gap: var(--square-gap);
   margin-bottom: 8px;
@@ -85,13 +60,12 @@
 
 .monthLabel {
   font-size: var(--label-size);
-  color: #a1a1aa;
+  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
 .daysGrid {
   display: grid;
-  /* Используем переменную вместо жесткого значения */
   grid-template-rows: repeat(7, var(--square-size));
   grid-auto-flow: column;
   gap: var(--square-gap);
@@ -107,15 +81,15 @@
   border-radius: 2px;
   position: relative;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform var(--transition-fast);
 
   &:hover {
     transform: scale(1.25);
     z-index: 20;
     filter: brightness(1.25);
-    outline: 1px solid rgba(255, 255, 255, 0.5);
+    outline: 1px solid rgb(255 255 255 / 50%);
     outline-offset: -1px;
-    box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 0 8px rgb(99 102 241 / 40%);
 
     &::after {
       opacity: 1;
@@ -130,28 +104,25 @@
     bottom: 125%;
     left: 50%;
     transform: translateX(var(--tx)) translateY(var(--ty));
-
-    background-color: #1c1c1c;
-    color: #ffffff;
-    border: 1px solid #3f3f46;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-subtle);
     padding: 5px 9px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 12px;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-
+    box-shadow: var(--shadow-md);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: all 0.15s ease-out;
+    transition: all var(--transition-fast);
 
-    @media (max-width: 768px) {
+    @include mq-down('md') {
       font-size: 10px;
       padding: 3px 6px;
     }
   }
 
-  /* Для верхних рядов показываем тултип снизу, чтобы он не обрезался верхней границей */
   &:nth-child(7n + 1),
   &:nth-child(7n + 2) {
     --ty: -4px;
@@ -162,7 +133,6 @@
     }
   }
 
-  /* Для первых 4 недель выравниваем тултип по левому краю ячейки (растет вправо) */
   &:nth-child(-n + 28) {
     --tx: 0;
 
@@ -171,7 +141,6 @@
     }
   }
 
-  /* Для последних 4 недель выравниваем тултип по правому краю ячейки (растет влево) */
   &:nth-last-child(-n + 28) {
     --tx: 0;
 
