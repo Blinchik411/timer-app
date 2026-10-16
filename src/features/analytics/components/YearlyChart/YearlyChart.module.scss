@@ -1,0 +1,152 @@
+.chartCard {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow: hidden;
+
+  --square-size: 15px;
+  --square-gap: 3px;
+  --label-size: 11px;
+
+  @include mq-down('md') {
+    --square-size: 10px;
+    --square-gap: 2px;
+    --label-size: 9px;
+
+    padding: 16px;
+  }
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+
+  @include mq-down('md') {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+}
+
+.scrollContainer {
+  @include custom-scrollbar(6px, var(--color-bg-dark), var(--color-border-subtle));
+
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gridWrapper {
+  display: inline-block;
+  min-width: max-content;
+  padding-left: 4px;
+  padding-right: 12px;
+}
+
+.monthsGrid {
+  display: grid;
+  grid-template-columns: repeat(53, var(--square-size));
+  gap: var(--square-gap);
+  margin-bottom: 8px;
+}
+
+.monthLabel {
+  font-size: var(--label-size);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-rows: repeat(7, var(--square-size));
+  grid-auto-flow: column;
+  gap: var(--square-gap);
+}
+
+.daySquare {
+  --tx: -50%;
+  --ty: 4px;
+  --hover-ty: 0;
+
+  width: var(--square-size);
+  height: var(--square-size);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+
+  &:hover {
+    transform: scale(1.25);
+    z-index: 20;
+    filter: brightness(1.25);
+    outline: 1px solid rgb(255 255 255 / 50%);
+    outline-offset: -1px;
+    box-shadow: 0 0 8px rgb(99 102 241 / 40%);
+
+    &::after {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(var(--tx)) translateY(var(--hover-ty));
+    }
+  }
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(var(--tx)) translateY(var(--ty));
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-subtle);
+    padding: 5px 9px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all var(--transition-fast);
+
+    @include mq-down('md') {
+      font-size: 10px;
+      padding: 3px 6px;
+    }
+  }
+
+  &:nth-child(7n + 1),
+  &:nth-child(7n + 2) {
+    --ty: -4px;
+
+    &::after {
+      bottom: auto;
+      top: 125%;
+    }
+  }
+
+  &:nth-child(-n + 28) {
+    --tx: 0;
+
+    &::after {
+      left: 0;
+    }
+  }
+
+  &:nth-last-child(-n + 28) {
+    --tx: 0;
+
+    &::after {
+      left: auto;
+      right: 0;
+    }
+  }
+}
