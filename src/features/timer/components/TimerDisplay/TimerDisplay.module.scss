@@ -1,0 +1,17 @@
+.displayContainer {
+  @include flex-center;
+
+  margin: 20px 0 32px;
+  user-select: none;
+}
+
+.timeText {
+  /* Резиновая плавная типографика: от 52px (3.25rem) на мобильных до 76px (4.75rem) на десктопе */
+  font-size: clamp(3.25rem, 9.5vw, 4.75rem);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -1.5px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 30px rgb(255 255 255 / 8%);
+  transition: all var(--transition-normal);
+}

@@ -1,0 +1,86 @@
+.controlsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.topRow {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+%btn {
+  @include flex-center;
+
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  user-select: none;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+  }
+}
+
+.btnStart {
+  @extend %btn;
+
+  flex: 1;
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+  box-shadow: 0 4px 12px var(--color-primary-shadow);
+
+  &.running {
+    background-color: var(--color-warning);
+    box-shadow: 0 4px 12px var(--color-warning-shadow);
+  }
+}
+
+.btnReset {
+  @extend %btn;
+
+  flex: 1;
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-bg-surface-hover);
+    color: var(--color-text-primary);
+  }
+}
+
+.btnSave {
+  @extend %btn;
+
+  width: 100%;
+  background-color: var(--color-save);
+  color: var(--color-text-primary);
+  border: 1px solid transparent;
+  box-shadow: 0 4px 12px var(--color-save-shadow);
+
+  &:disabled {
+    background-color: var(--color-bg-surface);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-dim);
+  }
+}
